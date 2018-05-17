@@ -1,0 +1,5 @@
+PIPELINE_SOURCE_REPOSITORY_URL=https://git.apps.coo.rht-labs.com/coo/touchpoint-service.git
+PIPELINE_SOURCE_REPOSITORY_REF=master
+NAME=touchpoint-application
+S2I_BASE_IMAGE=redhat-openjdk18-openshift:1.2
+PIPELINE_SOURCE_SECRET=gitlab

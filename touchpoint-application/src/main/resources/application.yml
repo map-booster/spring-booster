@@ -1,0 +1,9 @@
+management.context-path=/actuator
+management.server.port=8081
+
+#mongodb
+spring.data.mongodb.host=mongodb
+spring.data.mongodb.port=27017
+spring.data.mongodb.database=touchpoint
+spring.data.mongodb.username=mongouser
+spring.data.mongodb.password=mongopass
