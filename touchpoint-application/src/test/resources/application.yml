@@ -1,14 +1,12 @@
 management:
   server:
-    port: 8081
+    port: 9999
   context-path: /actuator
 
 #mongodb
 spring:
   data:
     mongodb:
-      host: mongodb
+      host: 127.0.0.1
       port: 27017
       database: touchpoint
-      username: mongouser
-      password: mongopass

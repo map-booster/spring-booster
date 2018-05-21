@@ -3,9 +3,9 @@ openshift_cluster_content:
 - object: app-builds
   content:
   - name: touchpoint-build
-    template: "https://raw.githubusercontent.com/rht-labs/labs-ci-cd/v3.7.5/openshift-templates/s2i-app-build/template-with-secrets.yaml"
+    template: "https://raw.githubusercontent.com/rht-labs/labs-ci-cd/v3.9.1/openshift-templates/s2i-app-build/template-with-secrets.yaml"
     params: "{{ playbook_dir }}/params/app/build"
-    namespace: "{{ ci_cd_namespace }}"
+    namespace: "{{ ci_cd.namespace }}"
     tags:
     - build
 - object: dev-stage
@@ -13,13 +13,13 @@ openshift_cluster_content:
   - name: touchpoint-mongo-deploy
     template: "{{ playbook_dir }}/templates/mongodb-persistent.yml"
     params: "{{ playbook_dir }}/params/mongo/dev"
-    namespace: "{{ dev_namespace }}"
+    namespace: "{{ dev.namespace }}"
     tags:
     - dev
   - name: touchpoint-deploy
     template: "{{ playbook_dir }}/templates/spring-boot-deploy.yaml"
     params: "{{ playbook_dir }}/params/app/dev"
-    namespace: "{{ dev_namespace }}"
+    namespace: "{{ dev.namespace }}"
     tags:
     - dev
 - object: test-stage
@@ -27,12 +27,12 @@ openshift_cluster_content:
   - name: touchpoint-mongo-deploy
     template: "{{ playbook_dir }}/templates/mongodb-persistent.yml"
     params: "{{ playbook_dir }}/params/mongo/test"
-    namespace: "{{ test_namespace }}"
+    namespace: "{{ test.namespace }}"
     tags:
     - test
   - name: touchpoint-deploy
     template: "{{ playbook_dir }}/templates/spring-boot-deploy.yaml"
     params: "{{ playbook_dir }}/params/app/test"
-    namespace: "{{ test_namespace }}"
+    namespace: "{{ test.namespace }}"
     tags:
     - test
