@@ -1,6 +1,6 @@
 ## Overview
 
-Spring Boot REST APIs for managing touchpoint details.
+Spring Boot REST APIs for managing GeoJSON details.
 
 ---
 
@@ -22,7 +22,7 @@ Apache Maven
 
 ### Alternative
 
-`mvn clean spring-boot:run`
+`mvn spring-boot:run`
 
 ### Running the Tests
 
@@ -35,8 +35,3 @@ Unit tests will be executed during the `test` lifecycle phase and will run as pa
 To access the application, open the following link in your browser:
 
 `http://localhost:8080`
-
-Swagger UI can be accessed with the following link:
-
-`http://localhost:8080/swagger-ui.html`
-

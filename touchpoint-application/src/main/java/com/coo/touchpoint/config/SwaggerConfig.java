@@ -10,6 +10,8 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.util.ArrayList;
+
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
@@ -23,7 +25,7 @@ public class SwaggerConfig {
 
 	private ApiInfo apiInfo() {
 		return new ApiInfo("Touchpoint REST API", "Service to manage touchpoint event information.", "1.0.0", "", null,
-				"License of API", "");
+				"License of API", "", new ArrayList<>());
 	}
 
 }

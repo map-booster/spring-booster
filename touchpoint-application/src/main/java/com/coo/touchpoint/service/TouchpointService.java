@@ -29,7 +29,7 @@ public class TouchpointService {
 	 * Creates and persists a {@link TouchpointEvent} into the configured data
 	 * store.
 	 * 
-	 * @param loginInfo
+	 * @param touchpointEvent
 	 * @return
 	 */
 	public TouchpointEvent createTouchpointEvent(TouchpointEvent touchpointEvent) {
