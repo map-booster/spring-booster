@@ -18,7 +18,7 @@ Apache Maven
 
 ### Run the application
 
-`java -jar target/touchpoint-application-0.0.1-SNAPSHOT.jar`
+`java -jar target/gis-service-0.0.1-SNAPSHOT.jar`
 
 ### Alternative
 

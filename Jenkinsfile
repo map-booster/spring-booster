@@ -6,11 +6,11 @@ pipeline {
         DEV_PROJECT = "coo-dev"
         TEST_PROJECT = "coo-test"
         SOURCE_CONTEXT_DIR = ""
-        UBER_JAR_CONTEXT_DIR = "touchpoint-application/target/"
+        UBER_JAR_CONTEXT_DIR = "gis-service/target/"
         MVN_COMMAND = "clean deploy"
         MVN_SNAPSHOT_DEPLOYMENT_REPOSITORY = "nexus::default::http://nexus:8081/repository/maven-snapshots"
         MVN_RELEASE_DEPLOYMENT_REPOSITORY = "nexus::default::http://nexus:8081/repository/maven-releases"
-        APP_NAME = "touchpoint-application"
+        APP_NAME = "gis-service"
         OCP_API_SERVER = "${OPENSHIFT_API_URL}"
         OCP_TOKEN = readFile('/var/run/secrets/kubernetes.io/serviceaccount/token').trim()
     

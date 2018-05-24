@@ -1,2 +1,2 @@
 [app]
-touchpoint-application ansible_connection=local
+gis-service ansible_connection=local
