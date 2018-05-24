@@ -1,6 +1,7 @@
 package com.coo.gis.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,12 +19,14 @@ public class GisResource {
 		this.gisService = gisService;
 	}
 
-	@RequestMapping(value = "/populatedplaces", method = RequestMethod.GET)
+	@CrossOrigin
+	@RequestMapping(value = "/populatedplaces", method = RequestMethod.GET, produces = "application/json")
 	public String getPopulatedPlaces() {
 		return gisService.getPopulatedPlaces();
 	}
 	
-	@RequestMapping(value = "/educationnews", method = RequestMethod.GET)
+	@CrossOrigin 
+	@RequestMapping(value = "/educationnews", method = RequestMethod.GET, produces = "application/json")
 	public String getEducationNews() {
 		return gisService.getEducationNews();
 	}
