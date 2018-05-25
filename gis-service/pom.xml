@@ -76,6 +76,13 @@
 			<version>${swagger.version}</version>
 		</dependency>
 
+		<!-- Geojson jackson -->
+		<dependency>
+			<groupId>de.grundid.opendatalab</groupId>
+			<artifactId>geojson-jackson</artifactId>
+			<version>1.8</version>
+		</dependency>
+
 		<!-- Other -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -143,7 +150,8 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-failsafe-plugin</artifactId>
-				<!-- Using lower version for failsafe due to an issue with failsafe and the spring boot repackage plugin. -->
+				<!-- Using lower version for failsafe due to an issue with failsafe and 
+					the spring boot repackage plugin. -->
 				<version>2.18.1</version>
 				<configuration>
 					<skipTests>${integration-tests.skip}</skipTests>

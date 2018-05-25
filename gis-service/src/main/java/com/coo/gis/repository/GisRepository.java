@@ -5,17 +5,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
-import com.coo.gis.domain.GisEvent;
+import com.coo.gis.domain.GisInfo;
 
-public interface GisRepository extends MongoRepository<GisEvent, String> {
+public interface GisRepository extends MongoRepository<GisInfo, String> {
 
-	@Query("{'touchpointTransactionContextCode' : ?0 }")
-	public Page<GisEvent> findMostRecentTouchpointByType(String type, Pageable pageable);
-
-//	@Query("{'sort' : ['eventStartTimestamp', 'desc'], 'touchpointTransactionContextCode' : ?0 }")
-//	public GisEvent findMostRecentTouchpointByType(String type);
-
-	@Query("{ 'partyIdentification.identityName' : 'userId', 'partyIdentification.identityValue' : ?0, 'touchpointTransactionContextCode' : ?1 }")
-	public Page<GisEvent> findMostRecentTouchpointByUserIdAndType(String userId, String type, Pageable pageable);
+	@Query("{'type' : ?0 }")
+	public Page<GisInfo> findGisInfo(String type, Pageable pageable);
 
 }

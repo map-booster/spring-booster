@@ -1,14 +1,14 @@
 package com.coo.gis.service;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.List;
 
+import org.geojson.FeatureCollection;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
+import com.coo.gis.domain.GisInfo;
 import com.coo.gis.repository.GisRepository;
 
 @Component
@@ -26,39 +26,58 @@ public class GisService {
 	 * 
 	 * @return
 	 */
-	public String getEducationNews() {
+	public FeatureCollection getEducationNews() {
+		GisInfo gisInfo = null;
+		Page<GisInfo> page = null;
+		PageRequest request = PageRequest.of(0, 1);
+		
+		page = repository.findGisInfo(GisInfo.EDUCATION_NEWS, request);
+		
 
-		String json = null;
-
-		try {
-			InputStream inputStream = getClass().getResourceAsStream("/gis/educationnews.json");
-			json = readFromInputStream(inputStream);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (null != page.getContent() && page.getContent().size() > 0) {
+			gisInfo = page.getContent().get(0);
 		}
+		
+		if(gisInfo != null)
+			return gisInfo.getFeatureCollection();
 
-		return json;
+		return null;
 	}
-
+	
+	
 	/**
-	 * Returns a {@link List} of populated places in GEOJSON format.
+	 * Returns a {@link List} of Populated places in GEOJSON format.
 	 * 
 	 * @return
 	 */
-	public String getPopulatedPlaces() {
+	public FeatureCollection getPopulatedPlaces() {
+		GisInfo gisInfo = null;
+		Page<GisInfo> page = null;
+		PageRequest request = PageRequest.of(0, 1);
+		
+		page = repository.findGisInfo(GisInfo.POPULATED_PLACES, request);
+		
 
-		String json = null;
-
-		try {
-			InputStream inputStream = getClass().getResourceAsStream("/gis/populatedplaces.json");
-			json = readFromInputStream(inputStream);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (null != page.getContent() && page.getContent().size() > 0) {
+			gisInfo = page.getContent().get(0);
 		}
+		
+		if(gisInfo != null)
+			return gisInfo.getFeatureCollection();
 
-		return json;
+		return null;
+	}
+
+	
+	/**
+	 * Creates and persists a {@link GisInfo} into the configured data
+	 * store.
+	 * 
+	 * @param gisInfo
+	 * @return
+	 */
+	public GisInfo createGisInfo(GisInfo gisInfo) {
+		return repository.insert(gisInfo);
 	}
 
 	/*
@@ -67,17 +86,6 @@ public class GisService {
 	 */
 	public void deleteAllGis() {
 		repository.deleteAll();
-	}
-
-	private String readFromInputStream(InputStream inputStream) throws IOException {
-		StringBuilder resultStringBuilder = new StringBuilder();
-		try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
-			String line;
-			while ((line = br.readLine()) != null) {
-				resultStringBuilder.append(line).append("\n");
-			}
-		}
-		return resultStringBuilder.toString();
 	}
 
 }
