@@ -1,5 +1,5 @@
-{"type":"educationnews", featureCollection: {
-{ "type": "FeatureCollection", "features": [
+{ "type":"educationnews", featureCollection: {
+"type": "FeatureCollection", "features": [
 
 { "type": "Feature", "properties": { "count": 34205 }, "geometry": { "type": "Point", "coordinates": [105.0000, 35.0000] } }
 ,{ "type": "Feature", "properties": { "count": 33654 }, "geometry": { "type": "Point", "coordinates": [-97.6475, 31.1060] } }
