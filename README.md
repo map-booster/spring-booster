@@ -51,7 +51,7 @@ curl -X POST -H "Content-Type:application/json" -d ./sample-data/populatedplaces
 
 Navigate to the `gis-service` directory, then run:
 
-`java -jar target/gis-service-0.0.1-SNAPSHOT.jar`
+`java -jar target/gis-service-1.0.0-SNAPSHOT.jar`
 
 #### Alternative
 
