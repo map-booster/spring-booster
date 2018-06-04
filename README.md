@@ -31,16 +31,25 @@ $ cat /etc/hosts
 
 For Windows, please refer to the Windows documentation to change the hosts file.
 
-### Load sample GIS data into mongodb
+### Create mongo user
 
-#### Load education news geojson
+Connect to mongo:
 ```
-curl -X POST -H "Content-Type:application/json" -d ./sample-data/educationnews.json http://localhost:8080/gis/
+mongo --host 127.0.0.1:27017
 ```
 
-#### Load populated places geojson
+Create a user:
 ```
-curl -X POST -H "Content-Type:application/json" -d ./sample-data/populatedplaces.json http://localhost:8080/gis/
+use gis
+db.createUser(
+ {
+   "user": "mongouser",
+   "pwd": "mongopass",
+   "roles": [
+      { "role": "readWrite", "db": "gis" }
+   ]
+ }
+)
 ```
 
 ### Build the application using Maven
@@ -62,6 +71,18 @@ Navigate to the `gis-service` directory, then run:
 Unit tests will be executed during the `test` lifecycle phase and will run as part of any maven goal after `test`.
 
 `mvn package`
+
+### Load sample GIS data into mongodb
+
+#### Load education news geojson
+```
+curl -X POST -H "Content-Type:application/json" -d @./sample-data/educationnews.json http://localhost:8080/gis/
+```
+
+#### Load populated places geojson
+```
+curl -X POST -H "Content-Type:application/json" -d @./sample-data/populatedplaces.json http://localhost:8080/gis/
+```
 
 ### Access the application
 
