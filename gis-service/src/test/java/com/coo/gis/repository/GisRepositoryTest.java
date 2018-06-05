@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.coo.gis.domain.GisInfo;
@@ -20,9 +19,6 @@ import com.coo.gis.domain.GisInfo;
 @DataMongoTest
 public class GisRepositoryTest {
 
-	@Autowired
-	private MongoTemplate mongoTemplate;
-	
 	@Autowired
 	private GisRepository gisRepository;
 	
@@ -36,7 +32,7 @@ public class GisRepositoryTest {
 	    FeatureCollection featureCollection = new FeatureCollection();
 	    featureCollection.add(feature);
 	    gisInfo.setFeatureCollection(featureCollection);
-	    mongoTemplate.insert(gisInfo);
+	    gisRepository.insert(gisInfo);
 	    
 	    // when
 	    PageRequest request = PageRequest.of(0, 1);
