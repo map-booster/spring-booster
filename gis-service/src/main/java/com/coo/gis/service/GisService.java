@@ -14,11 +14,10 @@ import com.coo.gis.repository.GisRepository;
 @Component
 public class GisService {
 
+	@Autowired
 	private GisRepository repository;
 
-	@Autowired
-	public GisService(GisRepository repository) {
-		this.repository = repository;
+	public GisService() {
 	}
 
 	/**
@@ -28,14 +27,13 @@ public class GisService {
 	 */
 	public FeatureCollection getEducationNews() {
 		GisInfo gisInfo = null;
-		Page<GisInfo> page = null;
 		PageRequest request = PageRequest.of(0, 1);
 		
-		page = repository.findGisInfo(GisInfo.EDUCATION_NEWS, request);
+		List<GisInfo> list = repository.findGisInfo(GisInfo.EDUCATION_NEWS, request);
 		
 
-		if (null != page.getContent() && page.getContent().size() > 0) {
-			gisInfo = page.getContent().get(0);
+		if (null != list && list.size() > 0) {
+			gisInfo = list.get(0);
 		}
 		
 		if(gisInfo != null)
@@ -55,11 +53,11 @@ public class GisService {
 		Page<GisInfo> page = null;
 		PageRequest request = PageRequest.of(0, 1);
 		
-		page = repository.findGisInfo(GisInfo.POPULATED_PLACES, request);
+		List<GisInfo> list = repository.findGisInfo(GisInfo.POPULATED_PLACES, request);
 		
 
-		if (null != page.getContent() && page.getContent().size() > 0) {
-			gisInfo = page.getContent().get(0);
+		if (null != list && list.size() > 0) {
+			gisInfo = list.get(0);
 		}
 		
 		if(gisInfo != null)

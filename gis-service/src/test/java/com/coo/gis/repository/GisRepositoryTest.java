@@ -2,6 +2,8 @@ package com.coo.gis.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
+
 import org.geojson.Feature;
 import org.geojson.FeatureCollection;
 import org.geojson.Point;
@@ -9,7 +11,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -36,11 +37,11 @@ public class GisRepositoryTest {
 	    
 	    // when
 	    PageRequest request = PageRequest.of(0, 1);
-	    Page<GisInfo> page = gisRepository.findGisInfo(gisInfo.getType(), request);
+	    List<GisInfo> list = gisRepository.findGisInfo(gisInfo.getType(), request);
 	 
 	    GisInfo found = null;
-	    if (null != page.getContent() && page.getContent().size() > 0) {
-			found = page.getContent().get(0);
+	    if (null != list && list.size() > 0) {
+			found = list.get(0);
 		}
 	    
 	    // then
