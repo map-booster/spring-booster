@@ -16,10 +16,4 @@ public class GisInfo {
 	
 	private FeatureCollection featureCollection;
 	
-	@Override
-	public String toString() {
-		// TODO Auto-generated method stub
-		return "GISInfo: " + type;
-	}
-
 }

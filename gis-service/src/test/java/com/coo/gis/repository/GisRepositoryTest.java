@@ -1,0 +1,57 @@
+package com.coo.gis.repository;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import org.geojson.Feature;
+import org.geojson.FeatureCollection;
+import org.geojson.Point;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import com.coo.gis.domain.GisInfo;
+
+@RunWith(SpringRunner.class)
+@DataMongoTest
+public class GisRepositoryTest {
+
+	@Autowired
+	private MongoTemplate mongoTemplate;
+	
+	@Autowired
+	private GisRepository gisRepository;
+	
+	@Test
+	public void testFindByType() {
+	    // given
+	    GisInfo gisInfo = new GisInfo();
+	    gisInfo.setType(GisInfo.EDUCATION_NEWS);
+	    Feature feature = new Feature();
+	    feature.setGeometry(new Point(-180, -140));
+	    FeatureCollection featureCollection = new FeatureCollection();
+	    featureCollection.add(feature);
+	    gisInfo.setFeatureCollection(featureCollection);
+	    mongoTemplate.insert(gisInfo);
+	    
+	    // when
+	    PageRequest request = PageRequest.of(0, 1);
+	    Page<GisInfo> page = gisRepository.findGisInfo(gisInfo.getType(), request);
+	 
+	    GisInfo found = null;
+	    if (null != page.getContent() && page.getContent().size() > 0) {
+			found = page.getContent().get(0);
+		}
+	    
+	    // then
+	    assertThat(found.getFeatureCollection().getFeatures().get(0).getGeometry())
+	      .isEqualTo(gisInfo.getFeatureCollection().getFeatures().get(0).getGeometry());
+	    
+	    assertThat(found.getType())
+	      .isEqualTo(gisInfo.getType());
+	}
+}
