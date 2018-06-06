@@ -14,10 +14,11 @@ import com.coo.gis.repository.GisRepository;
 @Component
 public class GisService {
 
-	@Autowired
 	private GisRepository repository;
 
-	public GisService() {
+	@Autowired
+	public GisService(GisRepository repository) {
+		this.repository = repository;
 	}
 
 	/**
