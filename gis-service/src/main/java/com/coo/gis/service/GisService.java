@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.geojson.FeatureCollection;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +32,7 @@ public class GisService {
 		List<GisInfo> list = repository.findGisInfo(GisInfo.EDUCATION_NEWS, request);
 		
 
-		if (null != list && list.size() > 0) {
+		if (list != null && list.size() > 0) {
 			gisInfo = list.get(0);
 		}
 		
@@ -51,13 +50,12 @@ public class GisService {
 	 */
 	public FeatureCollection getPopulatedPlaces() {
 		GisInfo gisInfo = null;
-		Page<GisInfo> page = null;
 		PageRequest request = PageRequest.of(0, 1);
 		
 		List<GisInfo> list = repository.findGisInfo(GisInfo.POPULATED_PLACES, request);
 		
 
-		if (null != list && list.size() > 0) {
+		if (list != null && list.size() > 0) {
 			gisInfo = list.get(0);
 		}
 		
