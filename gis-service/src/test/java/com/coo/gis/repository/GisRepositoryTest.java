@@ -40,7 +40,7 @@ public class GisRepositoryTest {
 	    List<GisInfo> list = gisRepository.findGisInfo(gisInfo.getType(), request);
 	 
 	    GisInfo found = null;
-	    if (null != list && list.size() > 0) {
+	    if (list != null && list.size() > 0) {
 			found = list.get(0);
 		}
 	    
