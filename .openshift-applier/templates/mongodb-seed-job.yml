@@ -1,0 +1,78 @@
+apiVersion: v1
+kind: Template
+labels:
+  template: mongodb-database-seed
+metadata:
+  annotations:
+    description: Seeds a Mongodb Database
+    iconClass: icon-mongodb
+    tags: mongodb
+  name: mongodb-database-seed
+objects:
+- apiVersion: batch/v1
+  kind: Job
+  metadata:
+    name: ${APPLICATION_NAME}-${RANDOM_VALUE}
+  spec:
+    parallelism: 1
+    completions: 1
+    template:
+      metadata:
+        name: ${APPLICATION_NAME}
+      spec:
+        containers:
+        - name: ${APPLICATION_NAME}
+          image: ${IMAGE}
+          command:
+            - "/bin/bash"
+            - "-c"
+            - >
+              mongoimport --db $MONGODB_DATABASE --collection ${ASSET_COLLECTION} --drop --file ${FILE_PATH} --jsonArray --host $MONGODB_SERVICE -u $MONGODB_USER -p $MONGODB_PASSWORD && mongo $MONGODB_DATABASE --host $MONGODB_SERVICE --username $MONGODB_USER --password $MONGODB_PASSWORD --eval "db.${ASSET_COLLECTION}.createIndex( { \"${INDEX_KEY}\" : \"text\" } )"
+          env:
+            - name: MONGODB_USER
+              valueFrom:
+                secretKeyRef:
+                  key: database-user
+                  name: ${DATABASE_SERVICE_NAME}
+            - name: MONGODB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: database-password
+                  name: ${DATABASE_SERVICE_NAME}
+            - name: MONGODB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  key: database-name
+                  name: ${DATABASE_SERVICE_NAME}
+            - name: MONGODB_SERVICE
+              value: ${DATABASE_SERVICE_NAME}
+        restartPolicy: Never
+parameters:
+- description: The name for the application.
+  name: APPLICATION_NAME
+  required: true
+  value: mongodb-database-seed
+- description: Image name for the job
+  name: IMAGE
+  required: true
+  value: registry.access.redhat.com/rhscl/mongodb-32-rhel7
+- description: Random value for the job.
+  displayName: Random Value
+  from: '[a-z0-9]{5}'
+  generate: expression
+  name: RANDOM_VALUE
+  required: true
+- description: Mongodb Database Service Name
+  name: DATABASE_SERVICE_NAME
+  required: true
+  value: mongodb
+- description: MongoDb Asset Collection
+  name: ASSET_COLLECTION
+  required: true
+  value: assets
+- description: MongoDB File with Seed Data
+  name: FILE_PATH
+  required: true
+- description: MongoDB Text Index Key
+  name: INDEX_KEY
+  required: true

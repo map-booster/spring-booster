@@ -1,0 +1,189 @@
+---
+kind: Template
+apiVersion: v1
+metadata:
+  name: dockerfile-app-build-with-secret
+  annotations:
+    openshift.io/display-name: Dockerfile App Build Template With Secret
+    description: Dockerfile build config to create an image with files baked in.
+      Uses a secret to check out code.
+    iconClass: fa-cube
+objects:
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    labels:
+      build: "${NAME}"
+      app: "${NAME}"
+    name: "${NAME}"
+  spec: {}
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    labels:
+      build: "${NAME}"
+      name: "${NAME}-pipeline"
+      type: pipeline
+      app: "${NAME}"
+    name: "${NAME}-pipeline"
+  spec:
+    nodeSelector: {}
+    output: {}
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      contextDir: "${PIPELINE_CONTEXT_DIR}"
+      git:
+        ref: "${SOURCE_REPOSITORY_REF}"
+        uri: "${SOURCE_REPOSITORY_URL}"
+      type: Git
+      sourceSecret:
+        name: "${SOURCE_REPOSITORY_SECRET}"
+    strategy:
+      jenkinsPipelineStrategy:
+        jenkinsfilePath: "${JENKINSFILE_PATH}"
+      type: JenkinsPipeline
+    triggers:
+    - type: ConfigChange
+    - type: Bitbucket
+      bitbucket:
+        secret: "${BITBUCKET_WEBHOOK}"
+    - type: Generic
+      generic:
+        secret: "${GENERIC_WEBHOOK}"
+    - type: GitHub
+      github:
+        secret: "${GITHUB_WEBHOOK}"
+    - type: GitLab
+      gitlab:
+        secret: "${GITLAB_WEBHOOK}"
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    labels:
+      build: "${NAME}"
+    name: "${BUILDER_IMAGE_NAME}"
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: "${BUILDER_IMAGE_URL}:${BUILDER_IMAGE_TAG}"
+      generation: 2
+      importPolicy: {}
+      name: latest
+      referencePolicy:
+        type: Source
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    labels:
+      build: "${NAME}"
+      type: image
+    name: "${NAME}"
+  spec:
+    nodeSelector:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: "${NAME}:latest"
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      contextDir: "${SOURCE_CONTEXT_DIR}"
+      git:
+        ref: "${SOURCE_REPOSITORY_REF}"
+        uri: "${SOURCE_REPOSITORY_URL}"
+      sourceSecret:
+        name: "${SOURCE_REPOSITORY_SECRET}"
+      type: Git
+    strategy:
+      dockerStrategy:
+        dockerfilePath: "${DOCKERFILE_PATH}"
+        from:
+          kind: DockerImage
+          name: "${BUILDER_IMAGE_NAME}"
+      type: Docker
+    triggers:
+    - github:
+        secret: "${GITHUB_WEBHOOK}"
+      type: GitHub
+    - type: ConfigChange
+    - type: ImageChange
+parameters:
+- name: NAME
+  displayName: Name
+  description: The name assigned to all objects and the resulting imagestream.
+  required: true
+  value: mongodb-seed
+- name: PIPELINE_CONTEXT_DIR
+  displayName: Git Context Directory for Jenkinsfile
+  description: Set this to the directory where the Jenkinsfile is if not using the
+    default root directory
+- name: JENKINSFILE_PATH
+  displayName: Jenkinsfile Path
+  description: The path to the Jenkinsfile
+  required: true
+  value: Jenkinsfile
+- name: BITBUCKET_WEBHOOK
+  displayName: Bitbucket Webook
+  description: OCP secret string to configure a Bitbucket webhook
+  generate: expression
+  from: "[a-zA-Z0-9]{20}"
+- name: GENERIC_WEBHOOK
+  displayName: Generic Webook
+  description: OCP secret string to configure a Generic webhook
+  generate: expression
+  from: "[a-zA-Z0-9]{20}"
+- name: GITHUB_WEBHOOK
+  displayName: Github Webook
+  description: OCP secret string to configure a Github webhook
+  generate: expression
+  from: "[a-zA-Z0-9]{20}"
+- name: GITLAB_WEBHOOK
+  displayName: Gitlab Webook
+  description: OCP secret string to configure a Gitlab webhook
+  generate: expression
+  from: "[a-zA-Z0-9]{20}"
+- name: SOURCE_REPOSITORY_URL
+  displayName: Git Repository URL
+  description: The URL of the repository with your application source code.
+  required: true
+  value: https://github.com/rht-labs/examples
+- name: SOURCE_REPOSITORY_REF
+  displayName: Git Reference
+  description: Set this to a branch name, tag or other ref of your repository if you
+    are not using the default (master) branch.
+  value: master
+- name: SOURCE_REPOSITORY_SECRET
+  displayName: Secret for git repository
+  description: The name of the OCP secret that has credentials for the git repository
+  value: ''
+- name: SOURCE_CONTEXT_DIR
+  displayName: Git Context Directory
+  description: Set this to the directory where the build information is (e.g. Dockerfile)
+    if not using the default
+- name: BUILDER_IMAGE_NAME
+  displayName: Image name from which to build this pod
+  description: The build image which this build pod will extend to create it's new
+    build pod type.
+  value: rhel7
+  required: true
+- name: BUILDER_IMAGE_TAG
+  displayName: Image tag.
+  description: This is the image tag.
+  value: "7.5"
+  required: true
+- name: BUILDER_IMAGE_URL
+  displayName: Image URL.
+  description: This is the image URL.
+  value: rhel7
+  required: true
+- name: DOCKERFILE_PATH
+  displayName: Path to the Dockerfile
+  description: Path to the Dockerfile
+  value: Dockerfile
+  required: true
+labels:
+  template: dockerfile-app-build-with-secret-template

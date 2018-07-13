@@ -1,0 +1,24 @@
+---
+- name: Seed MongoDB with data
+  hosts: seed
+  vars:
+    target:
+      namespace: coo-dev
+    devapp:
+      file_path: /tmp/data/devAppsData.json
+      collection: devapp
+      text_index_key: searchableText
+    spatial:
+      file_path: /tmp/data/devAppsGeoJsonData.json
+      collection: spatial
+      text_index_key: properties.searchableText
+  tasks:
+    - name: replace params with variables
+      template:
+        src: "{{ playbook_dir }}/params/mongo-seed/job.j2"
+        dest: "{{ playbook_dir }}/params/mongo-seed/job-{{ item.collection }}"
+      with_items:
+        - "{{ devapp }}"
+        - "{{ spatial }}"
+    - include_role:
+        name: openshift-applier/roles/openshift-applier

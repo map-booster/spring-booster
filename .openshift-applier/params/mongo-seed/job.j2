@@ -1,0 +1,4 @@
+IMAGE=docker-registry.default.svc:5000/{{ target.namespace }}/mongodb-seed
+FILE_PATH={{ item.file_path }}
+ASSET_COLLECTION={{ item.collection }}
+INDEX_KEY={{ item.text_index_key }}

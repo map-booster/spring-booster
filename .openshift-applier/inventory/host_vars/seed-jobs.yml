@@ -1,0 +1,16 @@
+---
+openshift_cluster_content:
+- object: seed-data
+  content:
+  - name: devapp
+    template: "{{ playbook_dir }}/templates/mongodb-seed-job.yml"
+    params: "{{ playbook_dir }}/params/mongo-seed/job-{{ devapp.collection }}"
+    namespace: "{{ target.namespace }}"
+    tags:
+    - devapp
+  - name: spatial
+    template: "{{ playbook_dir }}/templates/mongodb-seed-job.yml"
+    params: "{{ playbook_dir }}/params/mongo-seed/job-{{ spatial.collection }}"
+    namespace: "{{ target.namespace }}"
+    tags:
+    - spatial
