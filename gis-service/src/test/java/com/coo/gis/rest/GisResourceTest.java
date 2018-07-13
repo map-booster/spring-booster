@@ -1,49 +1,51 @@
 package com.coo.gis.rest;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.geojson.Feature;
+import org.geojson.FeatureCollection;
+import org.geojson.Point;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.trace.http.HttpTrace.Response;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.coo.gis.domain.GeoJsonFeature;
-import com.coo.gis.domain.GeoJsonFeatureCollection;
 import com.coo.gis.domain.GisInfo;
-import com.coo.gis.service.SpatialService;
+import com.coo.gis.service.GisService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(SpatialResource.class)
+@WebMvcTest(GisResource.class)
 public class GisResourceTest {
 	
 	@Autowired
 	private MockMvc mvc;
  
 	@MockBean
-	private SpatialService service;
+	private GisService service;
  
+    private ObjectMapper mapper = new ObjectMapper();
+    
     @Test
 	public void testCreateTouchpointEvent() throws Exception {
     	
-    	GeoJsonFeatureCollection featureCollection = mockGisInfo(GisInfo.EDUCATION_NEWS);
+    	GisInfo gisInfo = mockGisInfo(GisInfo.EDUCATION_NEWS);
     	
     	// given
-		given(service.findAllSpatial()).willReturn(featureCollection);
+		given(service.getEducationNews()).willReturn(gisInfo.getFeatureCollection());
     	
     	// when
-		MockHttpServletResponse response = mvc.perform(get("/spatial/features")
+		MockHttpServletResponse response = mvc.perform(get("/gis/educationnews")
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andReturn().getResponse();
@@ -52,16 +54,22 @@ public class GisResourceTest {
 		assertThat(response).isNotNull();
 		assertThat(response.getStatus()).isEqualTo(200);
 		
+		FeatureCollection result = mapper.readValue(response.getContentAsString(), FeatureCollection.class);
+		assertThat(result).isNotNull();
+		assertThat(result).isEqualTo(gisInfo.getFeatureCollection());
+
 	}
     
-    private GeoJsonFeatureCollection mockGisInfo(String type) {
- 	    GeoJsonFeature feature = new GeoJsonFeature();
-	    feature.setGeometry(new GeoJsonPoint(-180, -140));
-	    List<GeoJsonFeature> features = new ArrayList<>();
-	    features.add(feature);
-	    GeoJsonFeatureCollection featureCollection = new GeoJsonFeatureCollection(features);
+    private GisInfo mockGisInfo(String type) {
+    	GisInfo gisInfo = new GisInfo();
+	    gisInfo.setType(type);
+	    Feature feature = new Feature();
+	    feature.setGeometry(new Point(-180, -140));
+	    FeatureCollection featureCollection = new FeatureCollection();
+	    featureCollection.add(feature);
+	    gisInfo.setFeatureCollection(featureCollection);
 	    
-	    return featureCollection;
+	    return gisInfo;
     }
  
 

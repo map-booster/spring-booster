@@ -9,6 +9,6 @@ spring:
     mongodb:
       host: mongodb
       port: 27017
-      database: devapps
+      database: gis
       username: mongouser
       password: mongopass

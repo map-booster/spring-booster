@@ -1,5 +1,2 @@
 [app]
 gis-service ansible_connection=local
-
-[seed]
-seed-jobs ansible_connection=local

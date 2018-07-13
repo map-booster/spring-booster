@@ -10,11 +10,3 @@ target
 .project
 bin
 tmp
-
-# Ignore everything that isn't job.j2 or build
-.openshift-applier/params/mongo-seed/*
-!.openshift-applier/params/mongo-seed/build
-!.openshift-applier/params/mongo-seed/job.j2
-
-.openshift-applier/roles
-.openshift-applier/*.retry
