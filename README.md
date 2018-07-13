@@ -34,22 +34,42 @@ For Windows, please refer to the Windows documentation to change the hosts file.
 ### Create mongo user
 
 Connect to mongo:
+
 ```
 mongo --host 127.0.0.1:27017
 ```
 
 Create a user:
+
 ```
-use gis
+use devapps
 db.createUser(
  {
    "user": "mongouser",
    "pwd": "mongopass",
    "roles": [
-      { "role": "readWrite", "db": "gis" }
+      { "role": "readWrite", "db": "devapps" }
    ]
  }
 )
+```
+
+### Add a text index to spatial collection in devapps db
+
+Run the following command to create a text index to search by searchable text:
+
+```
+use devapps
+db.spatial.createIndex( { "properties.searchableText" : "text" } )
+```
+[Related documentation](https://docs.mongodb.com/manual/text-search/)
+
+### Load sample devapps & geojson data into devapps db 
+
+```
+mongoimport --jsonArray --db devapps --collection spatial --drop --file sample-data/devAppsGeoJsonData.json
+
+mongoimport --jsonArray --db devapps --collection devapp --drop --file sample-data/devAppsData.json
 ```
 
 ### Build the application using Maven
@@ -72,27 +92,18 @@ Unit tests will be executed during the `test` lifecycle phase and will run as pa
 
 `mvn package`
 
-### Load sample GIS data into mongodb
-
-#### Load education news geojson
-```
-curl -X POST -H "Content-Type:application/json" -d @./sample-data/educationnews.json http://localhost:8080/gis/
-```
-
-#### Load populated places geojson
-```
-curl -X POST -H "Content-Type:application/json" -d @./sample-data/populatedplaces.json http://localhost:8080/gis/
-```
-
 ### Access the application
 
 To access the application, open the following link in your browser:
 
 `http://localhost:8080`
 
-## Data Sources
+### Access the Springboot Actuator endpoints
 
-This application serves sample data from public sources:
+To access the Springboot actuator endpoints, open the following link in your browser:
 
-- Populated places from [geojson.xyz](http://geojson.xyz/)
-- Education news from [The GDELT Project](https://blog.gdeltproject.org/gdelt-geo-2-0-api-debuts/) ([Live data set](https://api.gdeltproject.org/api/v2/geo/geo?query=theme:education&format=geojson&mode=PointHeatMap))
+health 
+`http://localhost:8081/actuator/health`
+
+info
+`http://localhost:8081/actuator/info`

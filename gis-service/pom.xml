@@ -49,6 +49,13 @@
 	</dependencyManagement>
 
 	<dependencies>
+		
+		<!-- Gis Domain -->
+		<dependency>
+			<groupId>com.coo.gis</groupId>
+			<artifactId>gis-domain</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
 		<!-- Spring Boot -->
 		<dependency>
@@ -89,7 +96,13 @@
 			<artifactId>lombok</artifactId>
 			<scope>provided</scope>
 		</dependency>
-
+		
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-csv</artifactId>
+			<version>1.5</version>
+		</dependency>
+		
 		<!-- Test -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

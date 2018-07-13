@@ -69,11 +69,19 @@ def promoteImageWithinCluster( String appName, String sourceProjectName, String 
 }
 
 
-def applyAnsibleInventory( String tag ){
+def applyAnsibleInventory( String playbook ){
     sh """
         cd .openshift-applier
         ansible-galaxy install -r requirements.yml --roles-path=roles
-        ansible-playbook -i inventory/ apply.yml -e filter_tags=${tag}
+        ansible-playbook ${playbook}
+    """
+}
+
+def applyAnsibleInventory( String playbook, String tag ){
+    sh """
+        cd .openshift-applier
+        ansible-galaxy install -r requirements.yml --roles-path=roles
+        ansible-playbook ${playbook} -e filter_tags=${tag}
     """
 }
 return this;

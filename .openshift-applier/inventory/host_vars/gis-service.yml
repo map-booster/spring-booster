@@ -8,6 +8,13 @@ openshift_cluster_content:
     namespace: "{{ ci_cd.namespace }}"
     tags:
     - build
+  - name: mongodb-seed-build
+    template: "{{ playbook_dir }}/templates/mongodb-seed-build.yml"
+    params: "{{ playbook_dir }}/params/mongo-seed/build"
+    namespace: "{{ ci_cd.namespace }}"
+    tags:
+    - build
+    - mongodb-seed-build
 - object: dev-stage
   content:
   - name: gis-mongo-deploy
@@ -22,6 +29,11 @@ openshift_cluster_content:
     namespace: "{{ dev.namespace }}"
     tags:
     - dev
+  - name: mongodb-seed-image-stream
+    file: "{{ playbook_dir }}/files/mongodb-imagestream.yml"
+    namespace: "{{ dev.namespace }}"
+    tags:
+    - dev
 - object: test-stage
   content:
   - name: gis-mongo-deploy
@@ -33,6 +45,11 @@ openshift_cluster_content:
   - name: gis-deploy
     template: "{{ playbook_dir }}/templates/spring-boot-deploy.yaml"
     params: "{{ playbook_dir }}/params/app/test"
+    namespace: "{{ test.namespace }}"
+    tags:
+    - test
+  - name: mongodb-seed-image-stream
+    file: "{{ playbook_dir }}/files/mongodb-imagestream.yml"
     namespace: "{{ test.namespace }}"
     tags:
     - test
